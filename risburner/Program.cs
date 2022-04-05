@@ -1,13 +1,16 @@
 ﻿using System;
 using System.IO;
+using System.Windows.Forms;
 using risburner.VideoConverters;
 
 namespace risburner
 {
+    
     class Program
     {
         private static string inputFile;
         
+        [STAThread]
         private static void Main(string[] args)
         {
             if (args.Length >= 1)
@@ -16,9 +19,9 @@ namespace risburner
             }
             else
             {
-                Console.Write("File: ");
-                inputFile = Console.ReadLine();
-                if (string.IsNullOrEmpty(inputFile)) inputFile = "";
+                var fd = new OpenFileDialog();
+                fd.ShowDialog();
+                inputFile = fd.FileName;
             }
 
             var inputFileInfo = new FileInfo(inputFile);
