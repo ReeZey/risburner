@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Windows.Forms;
 using FFMpegCore;
-using FFMpegCore.Arguments;
-using FFMpegCore.Enums;
 using risburner.Interfaces;
 
 namespace risburner.VideoConverters
@@ -18,11 +17,12 @@ namespace risburner.VideoConverters
             var fd = new FolderBrowserDialog();
             fd.ShowDialog();
             
-            Console.WriteLine(fd.SelectedPath);
+            //Console.WriteLine(fd.SelectedPath);
 
             var inputName = inputFileInfo.Name.Split(".")[0];
 
-            Console.Write("how often should an split occur? (format: 00:00:00 -> hours:minutes:seconds): "); 
+            Console.Write("how often should an split occur? (format: 00:00:00 -> hours:minutes:seconds): ");
+            Console.ReadLine(); //idk why i have to do these twice but otherwise it doesn't wait
             var segment = Console.ReadLine();
             if (string.IsNullOrEmpty(segment)) segment = "00:00:00";
             
@@ -43,10 +43,21 @@ namespace risburner.VideoConverters
                     .WithCustomArgument("-f segment")
                     .WithCustomArgument("-reset_timestamps 1")
                 )
-                .NotifyOnProgress(Program.onProgress, splitDuration)
+                .NotifyOnProgress(onProgress, splitDuration)
                 .ProcessSynchronously();
             
             Console.WriteLine("done");
         }
+
+        public string ToString(string? format, IFormatProvider? formatProvider)
+        {
+            return "Split Video";
+        }
+
+        private static readonly Action<double> onProgress = p =>
+        {
+            if (double.IsNaN(p)) p = 0;
+            Console.WriteLine($"Progress: {p}%");
+        };
     }
 }
