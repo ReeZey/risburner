@@ -9,9 +9,9 @@ using risburner.Interfaces;
 
 namespace risburner.VideoConverters
 {
-    public class SplitVideo : VideoConvert
+    public class SplitVideo : Converter
     {
-        public static void Init(FileInfo inputFileInfo)
+        public void Init(FileInfo inputFileInfo)
         {
             //ffmpeg -i input.mp4 -c copy -map 0 -segment_time 00:20:00 -f segment -reset_timestamps 1 output%03d.mp4
 
